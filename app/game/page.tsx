@@ -5,6 +5,7 @@ import { clsx } from "clsx";
 import { useGameStore } from "@/store";
 import {
   AngleSide,
+  Cell,
   FourSides,
   ILaserCell,
   PlayerColor,
@@ -203,80 +204,105 @@ function SwapCell() {
   );
 }
 
+const CellRenderer = ({
+  cell,
+  index,
+  selectedCell,
+}: {
+  cell: Cell;
+  index: number;
+  selectedCell: number | null;
+}) => {
+  switch (cell.type) {
+    case "empty":
+      return <EmptyCell />;
+    case "laser":
+      return (
+        <LaserCell
+          color={cell.color}
+          position={cell.position}
+          highlighted={selectedCell === index}
+        />
+      );
+    case "fire":
+      return <FireCell color={cell.color} />;
+    case "king":
+      return (
+        <KingCell color={cell.color} highlighted={selectedCell === index} />
+      );
+    case "defender":
+      return (
+        <DefenderCell
+          color={cell.color}
+          position={cell.position}
+          highlighted={selectedCell === index}
+        />
+      );
+    case "deflector":
+      return (
+        <DeflectorCell
+          color={cell.color}
+          position={cell.position}
+          highlighted={selectedCell === index}
+        />
+      );
+    case "switch":
+      return (
+        <SwitchCell
+          color={cell.color}
+          position={cell.position}
+          highlighted={selectedCell === index}
+        />
+      );
+    default:
+      return null;
+  }
+};
+
 function GameField() {
   const gameState = useGameStore();
-  const [selectedCell, setSelectedCell] = useState<number | null>(34);
+  const [selectedCell, setSelectedCell] = useState<number | null>(null);
 
   const availableMoves = useMemo(() => {
     if (selectedCell === null) return [];
     return calculatePossibleMoves(gameState.cells, selectedCell, playerColor);
   }, [selectedCell]);
 
+  function handleCellClick({ cell, index }: { cell: Cell; index: number }) {
+    //TODO: handle moves
+    if (cell.type === "empty" || (!!cell.color && cell.color != playerColor))
+      return;
+    if (selectedCell == index) {
+      setSelectedCell(null);
+    } else {
+      setSelectedCell(index);
+    }
+  }
+
   return (
-    <div className="grid w-fit grid-cols-10 gap-1.5">
+    <div className="relative grid w-fit grid-cols-10 gap-1.5">
       {gameState.cells.map((cell, index) => {
-        if (
-          selectedCell !== null &&
-          availableMoves.some((move) => move.position === index)
-        ) {
-          const move = availableMoves.find((move) => move.position === index);
-          if (!move) return <EmptyCell key={index} />;
-          return move.type === "move" ? (
-            <MoveCell key={index} />
-          ) : (
-            <SwapCell key={index} />
-          );
-        } else
-          switch (cell.type) {
-            case "empty":
-              return <EmptyCell key={index} />;
-            case "laser":
-              return (
-                <LaserCell
-                  key={index}
-                  color={cell.color}
-                  position={cell.position}
-                  highlighted={selectedCell === index}
-                />
-              );
-            case "fire":
-              return <FireCell key={index} color={cell.color} />;
-            case "king":
-              return (
-                <KingCell
-                  key={index}
-                  color={cell.color}
-                  highlighted={selectedCell === index}
-                />
-              );
-            case "defender":
-              return (
-                <DefenderCell
-                  key={index}
-                  color={cell.color}
-                  position={cell.position}
-                  highlighted={selectedCell === index}
-                />
-              );
-            case "deflector":
-              return (
-                <DeflectorCell
-                  key={index}
-                  color={cell.color}
-                  position={cell.position}
-                  highlighted={selectedCell === index}
-                />
-              );
-            case "switch":
-              return (
-                <SwitchCell
-                  key={index}
-                  color={cell.color}
-                  position={cell.position}
-                  highlighted={selectedCell === index}
-                />
-              );
-          }
+        const move = availableMoves.find((move) => move.position === index);
+        const isMoveAvailable = move !== undefined;
+
+        return (
+          <div
+            key={index}
+            className="relative"
+            onClick={() => handleCellClick({ cell, index })}
+          >
+            <CellRenderer
+              cell={cell}
+              index={index}
+              selectedCell={selectedCell}
+            />
+            {isMoveAvailable && (
+              <div className="absolute inset-0 z-10 opacity-80">
+                {move.type === "move" ? <MoveCell /> : <SwapCell />}
+              </div>
+            )}
+          </div>
+        );
       })}
     </div>
   );
