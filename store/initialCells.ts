@@ -1,54 +1,56 @@
 import {
   IEmptyCell,
-  IRedLaserCell,
-  IYellowLaserCell,
-  IRedFireCell,
-  IYellowFireCell,
+  ILaserCell,
+  IFireCell,
   Cell,
-  IRedKingCell,
-  IYellowKingCell,
-  IRedDefenderCell,
-  IYellowDefenderCell,
-  IRedDeflectorCell,
+  IKingCell,
+  IDefenderCell,
+  IDeflectorCell,
   AngleSide,
-  IYellowDeflectorCell,
   SwitchAngle,
-  IRedSwitchCell,
-  IYellowSwitchCell,
+  ISwitchCell,
+  PlayerColor,
 } from "@/store/types";
 
-const redLaserCell: IRedLaserCell = { type: "red-laser", position: "bottom" };
-const yellowLaserCell: IYellowLaserCell = {
-  type: "yellow-laser",
+const redLaserCell: ILaserCell = {
+  type: "laser",
+  color: "red",
+  position: "bottom",
+};
+const yellowLaserCell: ILaserCell = {
+  type: "laser",
+  color: "yellow",
   position: "up",
 };
 const emptyCell: IEmptyCell = { type: "empty" };
-const redFireCell: IRedFireCell = { type: "red-fire" };
-const yellowFireCell: IYellowFireCell = { type: "yellow-fire" };
-const redKingCell: IRedKingCell = { type: "red-king" };
-const yellowKingCell: IYellowKingCell = { type: "yellow-king" };
-const redDefenderCell: IRedDefenderCell = {
-  type: "red-defender",
+const redFireCell: IFireCell = { type: "fire", color: "red" };
+const yellowFireCell: IFireCell = { type: "fire", color: "yellow" };
+const redKingCell: IKingCell = { type: "king", color: "red" };
+const yellowKingCell: IKingCell = { type: "king", color: "yellow" };
+const redDefenderCell: IDefenderCell = {
+  type: "defender",
+  color: "red",
   position: "bottom",
 };
-const yellowDefenderCell: IYellowDefenderCell = {
-  type: "yellow-defender",
+const yellowDefenderCell: IDefenderCell = {
+  type: "defender",
+  color: "yellow",
   position: "up",
 };
-const redDeflectorCell = (position: AngleSide): IRedDeflectorCell => ({
-  type: "red-deflector",
+const deflectorCell = (
+  color: PlayerColor,
+  position: AngleSide,
+): IDeflectorCell => ({
+  type: "deflector",
+  color,
   position,
 });
-const yellowDeflectorCell = (position: AngleSide): IYellowDeflectorCell => ({
-  type: "yellow-deflector",
-  position,
-});
-const redSwitchCell = (position: SwitchAngle): IRedSwitchCell => ({
-  type: "red-switch",
-  position,
-});
-const yellowSwitchCell = (position: SwitchAngle): IYellowSwitchCell => ({
-  type: "yellow-switch",
+const switchCell = (
+  color: PlayerColor,
+  position: SwitchAngle,
+): ISwitchCell => ({
+  type: "switch",
+  color,
   position,
 });
 
@@ -61,13 +63,13 @@ export const initialCells: Cell[] = [
   redDefenderCell,
   redKingCell,
   redDefenderCell,
-  redDeflectorCell("bottom-right"),
+  deflectorCell("red", "bottom-right"),
   redFireCell,
   yellowFireCell,
   // row 2
   redFireCell,
   emptyCell,
-  redDeflectorCell("bottom-left"),
+  deflectorCell("red", "bottom-left"),
   emptyCell,
   emptyCell,
   emptyCell,
@@ -79,7 +81,7 @@ export const initialCells: Cell[] = [
   redFireCell,
   emptyCell,
   emptyCell,
-  yellowDeflectorCell("up-left"),
+  deflectorCell("yellow", "up-left"),
   emptyCell,
   emptyCell,
   emptyCell,
@@ -87,27 +89,27 @@ export const initialCells: Cell[] = [
   emptyCell,
   yellowFireCell,
   // row 4
-  redDeflectorCell("up-right"),
+  deflectorCell("red", "up-right"),
   emptyCell,
-  yellowDeflectorCell("bottom-left"),
+  deflectorCell("yellow", "bottom-left"),
   emptyCell,
-  redSwitchCell("up-bottom"),
-  redSwitchCell("bottom-up"),
+  switchCell("red", "up-bottom"),
+  switchCell("red", "bottom-up"),
   emptyCell,
-  redDeflectorCell("bottom-right"),
+  deflectorCell("red", "bottom-right"),
   emptyCell,
-  yellowDeflectorCell("up-left"),
+  deflectorCell("yellow", "up-left"),
   // row 5
-  redDeflectorCell("bottom-right"),
+  deflectorCell("red", "bottom-right"),
   emptyCell,
-  yellowDeflectorCell("up-left"),
+  deflectorCell("yellow", "up-left"),
   emptyCell,
-  yellowSwitchCell("bottom-up"),
-  yellowSwitchCell("up-bottom"),
+  switchCell("yellow", "bottom-up"),
+  switchCell("yellow", "up-bottom"),
   emptyCell,
-  redDeflectorCell("up-right"),
+  deflectorCell("red", "up-right"),
   emptyCell,
-  yellowDeflectorCell("bottom-left"),
+  deflectorCell("yellow", "bottom-left"),
   // row 6
   redFireCell,
   emptyCell,
@@ -115,7 +117,7 @@ export const initialCells: Cell[] = [
   emptyCell,
   emptyCell,
   emptyCell,
-  redDeflectorCell("bottom-right"),
+  deflectorCell("red", "bottom-right"),
   emptyCell,
   emptyCell,
   yellowFireCell,
@@ -127,13 +129,13 @@ export const initialCells: Cell[] = [
   emptyCell,
   emptyCell,
   emptyCell,
-  yellowDeflectorCell("up-right"),
+  deflectorCell("yellow", "up-right"),
   emptyCell,
   yellowFireCell,
   // row 8
   redFireCell,
   yellowFireCell,
-  yellowDeflectorCell("up-left"),
+  deflectorCell("yellow", "up-left"),
   yellowDefenderCell,
   yellowKingCell,
   yellowDefenderCell,

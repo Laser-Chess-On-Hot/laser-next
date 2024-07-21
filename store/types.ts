@@ -7,73 +7,51 @@ export type IEmptyCell = {
   type: "empty";
 };
 
-export type IRedLaserCell = {
-  type: "red-laser";
-  position: "bottom" | "right";
+export type ILaserCell =
+  | {
+      type: "laser";
+      color: "red";
+      position: "bottom" | "right";
+    }
+  | {
+      type: "laser";
+      color: "yellow";
+      position: "up" | "left";
+    };
+
+export type IFireCell = {
+  type: "fire";
+  color: PlayerColor;
 };
 
-export type IYellowLaserCell = {
-  type: "yellow-laser";
-  position: "up" | "left";
+export type IKingCell = {
+  type: "king";
+  color: PlayerColor;
 };
 
-export type IRedFireCell = {
-  type: "red-fire";
-};
-
-export type IYellowFireCell = {
-  type: "yellow-fire";
-};
-
-export type IRedKingCell = {
-  type: "red-king";
-};
-
-export type IYellowKingCell = {
-  type: "yellow-king";
-};
-
-export type IRedDefenderCell = {
-  type: "red-defender";
+export type IDefenderCell = {
+  type: "defender";
+  color: PlayerColor;
   position: FourSides;
 };
 
-export type IYellowDefenderCell = {
-  type: "yellow-defender";
-  position: FourSides;
-};
-
-export type IRedDeflectorCell = {
-  type: "red-deflector";
+export type IDeflectorCell = {
+  type: "deflector";
+  color: PlayerColor;
   position: AngleSide;
 };
 
-export type IYellowDeflectorCell = {
-  type: "yellow-deflector";
-  position: AngleSide;
-};
-
-export type IRedSwitchCell = {
-  type: "red-switch";
-  position: SwitchAngle;
-};
-
-export type IYellowSwitchCell = {
-  type: "yellow-switch";
+export type ISwitchCell = {
+  type: "switch";
+  color: PlayerColor;
   position: SwitchAngle;
 };
 
 export type Cell =
   | IEmptyCell
-  | IRedLaserCell
-  | IYellowLaserCell
-  | IRedFireCell
-  | IYellowFireCell
-  | IRedKingCell
-  | IYellowKingCell
-  | IRedDefenderCell
-  | IYellowDefenderCell
-  | IRedDeflectorCell
-  | IYellowDeflectorCell
-  | IRedSwitchCell
-  | IYellowSwitchCell;
+  | ILaserCell
+  | IFireCell
+  | IKingCell
+  | IDefenderCell
+  | IDeflectorCell
+  | ISwitchCell;

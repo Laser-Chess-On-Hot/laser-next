@@ -7,8 +7,7 @@ import {
   AngleSide,
   Cell,
   FourSides,
-  IRedLaserCell,
-  IYellowLaserCell,
+  ILaserCell,
   PlayerColor,
   SwitchAngle,
 } from "@/store/types";
@@ -22,7 +21,13 @@ function EmptyCell() {
   return <div className="bg-lc-gray size-8 rounded"></div>;
 }
 
-function RedLaserCell({ position }: { position: IRedLaserCell["position"] }) {
+function LaserCell({
+  color,
+  position,
+}: {
+  color: PlayerColor;
+  position: ILaserCell["position"];
+}) {
   return (
     <div
       className={clsx(
@@ -30,24 +35,7 @@ function RedLaserCell({ position }: { position: IRedLaserCell["position"] }) {
         position === "bottom" ? "rotate-180" : "rotate-90",
       )}
     >
-      <Laser color="red" size={25} />
-    </div>
-  );
-}
-
-function YellowLaserCell({
-  position,
-}: {
-  position: IYellowLaserCell["position"];
-}) {
-  return (
-    <div
-      className={clsx(
-        "bg-lc-gray flex size-8 items-center justify-center rounded",
-        position === "up" ? "" : "-rotate-90",
-      )}
-    >
-      <Laser color="yellow" size={25} />
+      <Laser color={color} size={25} />
     </div>
   );
 }
@@ -63,30 +51,25 @@ function FireCell({ color }: { color: PlayerColor }) {
     </div>
   );
 }
-function RedKingCell() {
+function KingCell({ color }: { color: PlayerColor }) {
   return (
     <div
       className={clsx(
         "bg-lc-gray flex size-8 items-center justify-center rounded",
       )}
     >
-      <King color="red" />
+      <King color={color} />
     </div>
   );
 }
 
-function YellowKingCell() {
-  return (
-    <div
-      className={clsx(
-        "bg-lc-gray flex size-8 items-center justify-center rounded",
-      )}
-    >
-      <King color="yellow" />
-    </div>
-  );
-}
-function RedDefenderCell({ position }: { position: FourSides }) {
+function DefenderCell({
+  color,
+  position,
+}: {
+  color: PlayerColor;
+  position: FourSides;
+}) {
   return (
     <div
       className={clsx(
@@ -96,27 +79,18 @@ function RedDefenderCell({ position }: { position: FourSides }) {
         position === "bottom" && "rotate-180",
       )}
     >
-      <Defender color="red" />
+      <Defender color={color} />
     </div>
   );
 }
 
-function YellowDefenderCell({ position }: { position: FourSides }) {
-  return (
-    <div
-      className={clsx(
-        "bg-lc-gray flex size-8 items-center justify-center rounded",
-        position === "left" && "-rotate-90",
-        position === "right" && "rotate-90",
-        position === "bottom" && "rotate-180",
-      )}
-    >
-      <Defender color="yellow" />
-    </div>
-  );
-}
-
-function RedDeflectorCell({ position }: { position: AngleSide }) {
+function DeflectorCell({
+  color,
+  position,
+}: {
+  color: PlayerColor;
+  position: AngleSide;
+}) {
   return (
     <div
       className={clsx(
@@ -126,27 +100,18 @@ function RedDeflectorCell({ position }: { position: AngleSide }) {
         position === "bottom-right" && "rotate-180",
       )}
     >
-      <Deflector color="red" />
+      <Deflector color={color} />
     </div>
   );
 }
 
-function YellowDeflectorCell({ position }: { position: AngleSide }) {
-  return (
-    <div
-      className={clsx(
-        "bg-lc-gray flex size-8 items-center justify-center rounded",
-        position === "up-right" && "rotate-90",
-        position === "bottom-left" && "-rotate-90",
-        position === "bottom-right" && "rotate-180",
-      )}
-    >
-      <Deflector color="yellow" />
-    </div>
-  );
-}
-
-function RedSwitchCell({ position }: { position: SwitchAngle }) {
+function SwitchCell({
+  color,
+  position,
+}: {
+  color: PlayerColor;
+  position: SwitchAngle;
+}) {
   return (
     <div
       className={clsx(
@@ -154,23 +119,11 @@ function RedSwitchCell({ position }: { position: SwitchAngle }) {
         position === "bottom-up" && "rotate-90",
       )}
     >
-      <Switch color="red" />
+      <Switch color={color} />
     </div>
   );
 }
 
-function YellowSwitchCell({ position }: { position: SwitchAngle }) {
-  return (
-    <div
-      className={clsx(
-        "bg-lc-gray flex size-8 items-center justify-center rounded",
-        position === "bottom-up" && "rotate-90",
-      )}
-    >
-      <Switch color="yellow" />
-    </div>
-  );
-}
 function GameField({ cells }: { cells: Cell[] }) {
   return (
     <div className="grid w-fit grid-cols-10 gap-1.5">
@@ -178,30 +131,20 @@ function GameField({ cells }: { cells: Cell[] }) {
         switch (cell.type) {
           case "empty":
             return <EmptyCell />;
-          case "red-laser":
-            return <RedLaserCell position={cell.position} />;
-          case "red-fire":
-            return <FireCell color="red" />;
-          case "yellow-fire":
-            return <FireCell color="yellow" />;
-          case "yellow-laser":
-            return <YellowLaserCell position={cell.position} />;
-          case "red-king":
-            return <RedKingCell />;
-          case "yellow-king":
-            return <YellowKingCell />;
-          case "red-defender":
-            return <RedDefenderCell position={cell.position} />;
-          case "yellow-defender":
-            return <YellowDefenderCell position={cell.position} />;
-          case "red-deflector":
-            return <RedDeflectorCell position={cell.position} />;
-          case "yellow-deflector":
-            return <YellowDeflectorCell position={cell.position} />;
-          case "red-switch":
-            return <RedSwitchCell position={cell.position} />;
-          case "yellow-switch":
-            return <YellowSwitchCell position={cell.position} />;
+          case "laser":
+            return <LaserCell color={cell.color} position={cell.position} />;
+          case "fire":
+            return <FireCell color={cell.color} />;
+          case "king":
+            return <KingCell color={cell.color} />;
+          case "defender":
+            return <DefenderCell color={cell.color} position={cell.position} />;
+          case "deflector":
+            return (
+              <DeflectorCell color={cell.color} position={cell.position} />
+            );
+          case "switch":
+            return <SwitchCell color={cell.color} position={cell.position} />;
         }
       })}
     </div>
