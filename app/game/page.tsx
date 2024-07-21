@@ -269,7 +269,6 @@ function GameField() {
   }, [selectedCell]);
 
   function handleCellClick({ cell, index }: { cell: Cell; index: number }) {
-    //TODO: handle moves
     if (cell.type === "empty" || (!!cell.color && cell.color != playerColor))
       return;
     if (selectedCell == index) {
@@ -297,7 +296,20 @@ function GameField() {
               selectedCell={selectedCell}
             />
             {isMoveAvailable && (
-              <div className="absolute inset-0 z-10 opacity-80">
+              <div
+                className="absolute inset-0 z-10 opacity-80"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (selectedCell) {
+                    if (move.type == "move") {
+                      gameState.moveCell({ from: selectedCell, to: index });
+                    } else if (move.type == "swap") {
+                      gameState.swapCells({ from: selectedCell, to: index });
+                    }
+                    setSelectedCell(null);
+                  }
+                }}
+              >
                 {move.type === "move" ? <MoveCell /> : <SwapCell />}
               </div>
             )}

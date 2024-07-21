@@ -43,9 +43,9 @@ export const calculatePossibleMoves = (
 
       const targetCell = gameState[newPosition];
 
-      // Check if the target cell is empty or of the same color (for non-switches)
       return (
         targetCell.type === "empty" ||
+        (targetCell.type == "fire" && targetCell.color == playerColor) ||
         (currentCell.type == "switch" && targetCell.type === "deflector")
       );
     })
