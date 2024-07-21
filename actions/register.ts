@@ -5,7 +5,7 @@
 import { prisma } from "./prisma";
 import crypto from "crypto";
 
-export async function register(public_key: string) {
+export async function register(public_key: string, username: string) {
   if (!public_key) {
     throw new Error("Public key is required");
   }
@@ -15,6 +15,7 @@ export async function register(public_key: string) {
   try {
     const user = await prisma.user.create({
       data: {
+        username,
         public_key,
         nonce,
       },

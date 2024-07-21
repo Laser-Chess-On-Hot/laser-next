@@ -16,6 +16,7 @@ datasource db {
 
 model User {
   id Int @id  @default(autoincrement())
+  username String @unique
   nonce String
   public_key String @unique
 }
