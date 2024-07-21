@@ -1,4 +1,6 @@
-export function LaserRed({ size }: { size: number }) {
+import { PlayerColor } from "@/store/types";
+
+export function Laser({ size, color }: { size: number; color: PlayerColor }) {
   return (
     <svg
       width={size}
@@ -9,7 +11,7 @@ export function LaserRed({ size }: { size: number }) {
     >
       <path
         d="M51 120C30.5655 120 14 102.539 14 81C14 59.4609 30.5655 42 51 42C71.4345 42 88 59.4609 88 81C88 102.539 71.4345 120 51 120Z"
-        fill="#FF2727"
+        fill={color == "red" ? "#FF2727" : "#FDBF1C"}
       />
       <path
         fillRule="evenodd"
@@ -19,7 +21,7 @@ export function LaserRed({ size }: { size: number }) {
       />
       <path
         d="M51 120C25.0426 120 3.99999 98.9574 3.99999 73C4 47.0426 25.0426 26 51 26C76.9574 26 98 47.0426 98 73C98 98.9574 76.9574 120 51 120Z"
-        fill="#FF2727"
+        fill={color == "red" ? "#FF2727" : "#FDBF1C"}
       />
       <path
         fillRule="evenodd"
@@ -29,7 +31,7 @@ export function LaserRed({ size }: { size: number }) {
       />
       <path
         d="M44 1C44 0.447715 44.4477 3.91405e-08 45 8.74227e-08L57 1.1365e-06C57.5523 1.18478e-06 58 0.447717 58 1L58 57C58 60.866 54.866 64 51 64V64C47.134 64 44 60.866 44 57L44 1Z"
-        fill="#FF2727"
+        fill={color == "red" ? "#FF2727" : "#FDBF1C"}
       />
       <path
         fillRule="evenodd"

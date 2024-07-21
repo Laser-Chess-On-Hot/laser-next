@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { LCNode } from "@/store/types";
-import { initialNodes } from "@/store/initialNodes";
+import { Cell } from "@/store/types";
+import { initialCells } from "@/store/initialCells";
 
 type GameState = {
-  nodes: LCNode[];
+  cells: Cell[];
 };
 
 export const useGameStore = create<GameState>((set, get) => ({
-  nodes: initialNodes,
+  cells: initialCells,
 }));
