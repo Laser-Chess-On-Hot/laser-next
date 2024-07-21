@@ -2,6 +2,15 @@ export type PlayerColor = "red" | "yellow";
 export type FourSides = "up" | "right" | "bottom" | "left";
 export type AngleSide = "up-left" | "up-right" | "bottom-right" | "bottom-left";
 export type SwitchAngle = "bottom-up" | "up-bottom";
+export type RotateDirection = "clockwise" | "counter-clockwise";
+
+export const fourSides: FourSides[] = ["up", "right", "bottom", "left"];
+export const angleSides: AngleSide[] = [
+  "up-left",
+  "up-right",
+  "bottom-right",
+  "bottom-left",
+];
 
 export type IEmptyCell = {
   type: "empty";
@@ -55,3 +64,5 @@ export type Cell =
   | IDefenderCell
   | IDeflectorCell
   | ISwitchCell;
+
+export const nonRotatableCells: Cell["type"][] = ["empty", "fire", "king"];

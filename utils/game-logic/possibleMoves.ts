@@ -46,7 +46,8 @@ export const calculatePossibleMoves = (
       return (
         targetCell.type === "empty" ||
         (targetCell.type == "fire" && targetCell.color == playerColor) ||
-        (currentCell.type == "switch" && targetCell.type === "deflector")
+        (currentCell.type == "switch" &&
+          (targetCell.type === "deflector" || targetCell.type == "defender"))
       );
     })
     .map((newPosition): MoveInfo => {
