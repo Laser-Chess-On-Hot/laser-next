@@ -5,6 +5,16 @@ import {
   IRedFireCell,
   IYellowFireCell,
   Cell,
+  IRedKingCell,
+  IYellowKingCell,
+  IRedDefenderCell,
+  IYellowDefenderCell,
+  IRedDeflectorCell,
+  AngleSide,
+  IYellowDeflectorCell,
+  SwitchAngle,
+  IRedSwitchCell,
+  IYellowSwitchCell,
 } from "@/store/types";
 
 const redLaserCell: IRedLaserCell = { type: "red-laser", position: "bottom" };
@@ -15,6 +25,32 @@ const yellowLaserCell: IYellowLaserCell = {
 const emptyCell: IEmptyCell = { type: "empty" };
 const redFireCell: IRedFireCell = { type: "red-fire" };
 const yellowFireCell: IYellowFireCell = { type: "yellow-fire" };
+const redKingCell: IRedKingCell = { type: "red-king" };
+const yellowKingCell: IYellowKingCell = { type: "yellow-king" };
+const redDefenderCell: IRedDefenderCell = {
+  type: "red-defender",
+  position: "bottom",
+};
+const yellowDefenderCell: IYellowDefenderCell = {
+  type: "yellow-defender",
+  position: "up",
+};
+const redDeflectorCell = (position: AngleSide): IRedDeflectorCell => ({
+  type: "red-deflector",
+  position,
+});
+const yellowDeflectorCell = (position: AngleSide): IYellowDeflectorCell => ({
+  type: "yellow-deflector",
+  position,
+});
+const redSwitchCell = (position: SwitchAngle): IRedSwitchCell => ({
+  type: "red-switch",
+  position,
+});
+const yellowSwitchCell = (position: SwitchAngle): IYellowSwitchCell => ({
+  type: "yellow-switch",
+  position,
+});
 
 export const initialCells: Cell[] = [
   // row 1
@@ -22,16 +58,16 @@ export const initialCells: Cell[] = [
   yellowFireCell,
   emptyCell,
   emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
+  redDefenderCell,
+  redKingCell,
+  redDefenderCell,
+  redDeflectorCell("bottom-right"),
   redFireCell,
   yellowFireCell,
   // row 2
   redFireCell,
   emptyCell,
-  emptyCell,
+  redDeflectorCell("bottom-left"),
   emptyCell,
   emptyCell,
   emptyCell,
@@ -43,7 +79,7 @@ export const initialCells: Cell[] = [
   redFireCell,
   emptyCell,
   emptyCell,
-  emptyCell,
+  yellowDeflectorCell("up-left"),
   emptyCell,
   emptyCell,
   emptyCell,
@@ -51,27 +87,27 @@ export const initialCells: Cell[] = [
   emptyCell,
   yellowFireCell,
   // row 4
-  redFireCell,
+  redDeflectorCell("up-right"),
   emptyCell,
+  yellowDeflectorCell("bottom-left"),
   emptyCell,
+  redSwitchCell("up-bottom"),
+  redSwitchCell("bottom-up"),
   emptyCell,
+  redDeflectorCell("bottom-right"),
   emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  yellowFireCell,
+  yellowDeflectorCell("up-left"),
   // row 5
-  redFireCell,
+  redDeflectorCell("bottom-right"),
   emptyCell,
+  yellowDeflectorCell("up-left"),
   emptyCell,
+  yellowSwitchCell("bottom-up"),
+  yellowSwitchCell("up-bottom"),
   emptyCell,
+  redDeflectorCell("up-right"),
   emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  yellowFireCell,
+  yellowDeflectorCell("bottom-left"),
   // row 6
   redFireCell,
   emptyCell,
@@ -79,7 +115,7 @@ export const initialCells: Cell[] = [
   emptyCell,
   emptyCell,
   emptyCell,
-  emptyCell,
+  redDeflectorCell("bottom-right"),
   emptyCell,
   emptyCell,
   yellowFireCell,
@@ -91,38 +127,16 @@ export const initialCells: Cell[] = [
   emptyCell,
   emptyCell,
   emptyCell,
-  emptyCell,
+  yellowDeflectorCell("up-right"),
   emptyCell,
   yellowFireCell,
   // row 8
   redFireCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
   yellowFireCell,
-  // row 9
-  redFireCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  yellowFireCell,
-  // row 10
-  redFireCell,
-  yellowFireCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
-  emptyCell,
+  yellowDeflectorCell("up-left"),
+  yellowDefenderCell,
+  yellowKingCell,
+  yellowDefenderCell,
   emptyCell,
   emptyCell,
   redFireCell,
