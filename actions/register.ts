@@ -1,12 +1,16 @@
-// actions/register.ts
-
 "use server";
 
-import { prisma } from "./prisma";
+import { prisma } from "@/prisma/prisma";
 import crypto from "crypto";
 
-export async function register(public_key: string, username: string) {
-  if (!public_key) {
+export async function register({
+  publicKey,
+  username,
+}: {
+  publicKey: string;
+  username: string;
+}) {
+  if (!publicKey) {
     throw new Error("Public key is required");
   }
 
@@ -16,13 +20,14 @@ export async function register(public_key: string, username: string) {
     const user = await prisma.user.create({
       data: {
         username,
-        public_key,
+        publicKey,
         nonce,
       },
     });
 
     return { nonce: user.nonce };
   } catch (error: any) {
+    console.log("register error", error);
     if (error.code === "P2002" && error.meta.target === "User_public_key_key") {
       throw new Error("Public key already exists");
     }

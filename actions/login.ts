@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "./prisma";
+import { prisma } from "@/prisma/prisma";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
@@ -31,7 +31,7 @@ export async function login(username: string, signedNonce: string) {
 
   const user = await prisma.user.findUnique({
     where: {
-      username: username,
+      username,
     },
   });
 
@@ -39,9 +39,10 @@ export async function login(username: string, signedNonce: string) {
     throw new Error("User not found");
   }
 
-  const { public_key, nonce } = user;
+  const { publicKey, nonce } = user;
+  console.log("user signedNonce", signedNonce);
 
-  const isVerified = verifySignedNonce(public_key, nonce, signedNonce);
+  const isVerified = verifySignedNonce(publicKey, nonce, signedNonce);
 
   if (isVerified) {
     if (!JWT_SECRET) {
@@ -70,8 +71,19 @@ function verifySignedNonce(
   verify.update(nonce);
   verify.end();
 
+  // // Ensure the public key is in PEM format
+  // const publicKeyPem = publicKey.includes("-----BEGIN PUBLIC KEY-----")
+  //   ? publicKey
+  //   : `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
+
   const publicKeyBuffer = Buffer.from(publicKey, "base64");
-  const signedNonceBuffer = Buffer.from(signedNonce, "base64");
+  const pemKey = `
+-----BEGIN PUBLIC KEY-----
+${publicKeyBuffer}
+-----END PUBLIC KEY-----
+`;
+
+  const signedNonceBuffer = Buffer.from(pemKey, "base64");
 
   return verify.verify(publicKeyBuffer, signedNonceBuffer);
 }
