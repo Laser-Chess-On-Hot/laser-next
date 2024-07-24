@@ -2,6 +2,7 @@
 
 import { prisma } from "@/prisma/prisma";
 import crypto from "crypto";
+import naclUtil from "tweetnacl-util";
 
 export async function register({
   publicKey,
@@ -12,6 +13,12 @@ export async function register({
 }) {
   if (!publicKey) {
     throw new Error("Public key is required");
+  }
+
+  try {
+    const _ = naclUtil.decodeBase64(publicKey);
+  } catch (error: any) {
+    throw new Error("The public key must be base64 encoded");
   }
 
   const nonce = crypto.randomBytes(32).toString("hex");

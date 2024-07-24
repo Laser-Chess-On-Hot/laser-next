@@ -4,6 +4,8 @@ import { prisma } from "@/prisma/prisma";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import nacl from "tweetnacl";
+import naclUtil from "tweetnacl-util";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -24,9 +26,9 @@ export async function generate_nonce(
   return { nonce: user.nonce };
 }
 
-export async function login(username: string, signedNonce: string) {
-  if (!username || !signedNonce) {
-    throw new Error("Username and signed nonce are required");
+export async function login(username: string, signature: string) {
+  if (!username) {
+    throw new Error("Username is required");
   }
 
   const user = await prisma.user.findUnique({
@@ -35,14 +37,23 @@ export async function login(username: string, signedNonce: string) {
     },
   });
 
+  // const user = {
+  //   id: 0,
+  //   username: "d",
+  //   publicKey: "",
+  //   nonce: "36bd7cfb5f8ffc7e3e483270ed38a868492746f0a23c0c01798bc23f6b764304",
+  // };
+
   if (!user) {
     throw new Error("User not found");
   }
 
   const { publicKey, nonce } = user;
-  console.log("user signedNonce", signedNonce);
+  console.log("user signedNonce", signature);
 
-  const isVerified = verifySignedNonce(publicKey, nonce, signedNonce);
+  const isVerified = verifySignedNonce(publicKey, nonce, signature);
+
+  console.log("isVerified", isVerified);
 
   if (isVerified) {
     if (!JWT_SECRET) {
@@ -65,27 +76,14 @@ export async function login(username: string, signedNonce: string) {
 function verifySignedNonce(
   publicKey: string,
   nonce: string,
-  signedNonce: string,
+  signature: string,
 ): boolean {
-  const verify = crypto.createVerify("SHA256");
-  verify.update(nonce);
-  verify.end();
+  const publicKeyUint8 = naclUtil.decodeBase64(publicKey);
+  const nonceUint8 = naclUtil.decodeUTF8(nonce);
 
-  // // Ensure the public key is in PEM format
-  // const publicKeyPem = publicKey.includes("-----BEGIN PUBLIC KEY-----")
-  //   ? publicKey
-  //   : `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
+  const signatureUint8 = naclUtil.decodeBase64(signature);
 
-  const publicKeyBuffer = Buffer.from(publicKey, "base64");
-  const pemKey = `
------BEGIN PUBLIC KEY-----
-${publicKeyBuffer}
------END PUBLIC KEY-----
-`;
-
-  const signedNonceBuffer = Buffer.from(pemKey, "base64");
-
-  return verify.verify(publicKeyBuffer, signedNonceBuffer);
+  return nacl.sign.detached.verify(nonceUint8, signatureUint8, publicKeyUint8);
 }
 
 export async function logout() {
