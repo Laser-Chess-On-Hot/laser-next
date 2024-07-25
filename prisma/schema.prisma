@@ -14,3 +14,16 @@ model User {
   nonce String
   publicKey String @unique
 }
+
+model Game {
+  id Int @id  @default(autoincrement())
+
+  playerId1 Int
+  playerId2 Int
+
+  currentPlayerId Int
+  numberOfMoves Int
+
+  sn String
+  winnerIndex Int // -1, 1, 2
+}

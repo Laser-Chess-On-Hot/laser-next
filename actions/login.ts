@@ -90,7 +90,7 @@ export async function logout() {
   cookies().delete("access-token");
 }
 
-export async function verifyJWT() {
+export async function getUserByJWT() {
   const token = cookies().get("access-token");
 
   if (!token?.value) {
@@ -112,4 +112,6 @@ export async function verifyJWT() {
   if (!user) {
     throw new Error("User not found");
   }
+
+  return user;
 }
